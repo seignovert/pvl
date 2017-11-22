@@ -6,6 +6,7 @@ import tempfile
 import shutil
 import pytest
 import pvl
+import datetime
 
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), 'data/')
@@ -97,12 +98,25 @@ def test_quoated_strings():
     module = pvl.PVLModule([
         ('int_like', "123"),
         ('float_like', '.2'),
-        ('date', '1987-02-25'),
-        ('time', '03:04:05'),
-        ('datetime', '1987-02-25T03:04:05'),
         ('keyword', 'END'),
         ('restricted_chars', '&<>\'{},[]=!#()%";|'),
         ('restricted_seq', '/**/'),
+    ])
+    assert module == pvl.loads(pvl.dumps(module))
+
+    encoder = pvl.encoder.IsisCubeLabelEncoder
+    assert module == pvl.loads(pvl.dumps(module, cls=encoder))
+
+    encoder = pvl.encoder.PDSLabelEncoder
+    assert module == pvl.loads(pvl.dumps(module, cls=encoder))
+
+def test_unquoated_strings():
+    module = pvl.PVLModule([
+        ('int', 123),
+        ('float', .2),
+        (u'date', datetime.date(1987, 2, 25)),
+        (u'time', datetime.time(3, 4, 5)),
+        (u'datetime', datetime.datetime(1987, 2, 25, 3, 4, 5)),
     ])
     assert module == pvl.loads(pvl.dumps(module))
 

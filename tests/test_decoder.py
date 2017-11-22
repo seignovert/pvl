@@ -357,7 +357,8 @@ def test_quotes():
         double = "double'quotes"
         single = 'single"quotes'
         mixed = 'mixed"\\'quotes'
-        number = '123'
+        integer = '123'
+        float = '1.234'
         date = '1918-05-11'
         multiline = 'this is a
                      multi-line string'
@@ -385,11 +386,14 @@ def test_quotes():
     assert isinstance(label['single'], six.text_type)
     assert label['mixed'] == 'mixed"\'quotes'
 
-    assert isinstance(label['number'], six.text_type)
-    assert label['number'] == '123'
+    assert isinstance(label['integer'], six.text_type)
+    assert label['integer'] == '123'
 
-    assert isinstance(label['date'], six.text_type)
-    assert label['date'] == '1918-05-11'
+    assert isinstance(label['float'], six.text_type)
+    assert label['float'] == '1.234'
+
+    assert isinstance(label['date'], datetime.date)
+    assert label['date'] == datetime.date(1918, 5, 11)
 
     assert isinstance(label['multiline'], six.text_type)
     assert label['multiline'] == 'this is a multi-line string'
@@ -689,6 +693,7 @@ def test_pds3_sample_image():
     assert label['RECORD_BYTES'] == 824
     assert label['LABEL_RECORDS'] == 1
     assert label['FILE_RECORDS'] == 601
+    assert label['IMAGE_MID_TIME'] == datetime.datetime(2007, 5, 15, 10, 49, 16, 89000, tzinfo=pytz.utc)
     assert label['IMAGE']['LINES'] == 600
     assert label['IMAGE']['LINE_SAMPLES'] == 824
     image_group = label['IMAGE']

@@ -722,6 +722,14 @@ class PVLDecoder(object):
             value += next
 
         self.expect(stream, mark)
+        return self.cast_quoated_string(value)
+
+    def cast_quoated_string(self, value):
+        try:
+            return self.parse_datetime(value)
+        except ValueError:
+            pass
+
         return value.decode('utf-8')
 
     def has_unquoated_string(self, stream):
